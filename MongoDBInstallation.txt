@@ -1,0 +1,58 @@
+Step 1: Enabling MongoDB repository
+
+To add the MongoDB repository to your system, open your text editor and create a new YUM repository configuration file named mongodb-org.repo inside the /etc/yum.repos.d/ directory:
+
+[mongodb-org-4.0]
+name=MongoDB Repository
+baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/4.0/x86_64/
+gpgcheck=1
+enabled=1
+gpgkey=https://www.mongodb.org/static/pgp/server-4.0.asc
+
+Step 2: Installing MongoDB
+sudo yum install mongodb-org
+
+Step 3: Create DB folder
+mkdir /data/db
+
+Step 4:Starting MongoDB
+sudo systemctl start mongod
+sudo systemctl enable mongod
+
+Step 5:Verifying MongoDB Installation
+sudo mongod
+
+Step 6: Creating Administrative MongoDB User
+If you enabled the MongoDB authentication, create one administrative MongoDB user that you will use to access and manage your MongoDB instance.
+
+First access the mongo shell with:
+
+mongo
+
+Once you are inside the MongoDB shell type the following command to connect to the admin database:
+
+use admin
+
+switched to db admin
+
+
+Create a new user named mongoAdmin with the userAdminAnyDatabase role:
+
+db.createUser1(
+  {
+    user: "mongoAdmin", 
+    pwd: "changeMe", 
+    roles: [ { role: "userAdminAnyDatabase", db: "admin" } ]
+  }
+)
+Copy
+Successfully added user: {
+	"user" : "mongoAdmin",
+	"roles" : [
+		{
+			"role" : "userAdminAnyDatabase",
+			"db" : "admin"
+		}
+	]
+}
+

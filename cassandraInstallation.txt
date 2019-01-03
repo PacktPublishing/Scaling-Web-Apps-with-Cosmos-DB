@@ -1,0 +1,103 @@
+Step 1 - Install JAVA
+Before installing any package it is recommended that you update the packages and repository using the following command.
+
+yum -y update
+
+Once your system is updated, we will install the latest version of Oracle Java into the server. Run the following command to download the RPM package.
+
+wget --no-cookies --no-check-certificate --header "Cookie:oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u131-b11/d54c1d3a095b4ff2b6607d096fa80163/jdk-8u131-linux-x64.rpm"
+
+If you do not have wget installed, you can run the yum -y install wget to install wget. Now install the downloaded RPM using the following command.
+
+yum -y localinstall jdk-8u131-linux-x64.rpm
+
+Step 2 - You can now check the Java version using the following command.
+
+java -version
+
+You will get the following output.
+
+[root@liptan-pc ~]# java -version
+java version "1.8.0_131"
+Java(TM) SE Runtime Environment (build 1.8.0_131-b11)
+Java HotSpot(TM) 64-Bit Server VM (build 25.131-b11, mixed mode)
+You will also need to check if JAVA_HOME environment variable is set. Run the following command for same.
+
+echo $JAVA_HOME
+
+If you get a null or blank output, you will need to manually set the JAVA_HOME variable. Edit the .bash_profile file using your favourite editor. In this tutorial, we will use nano editor. Run the following command to edit .bash_profile using nano.
+
+vi ~/.bash_profile
+
+Now add the following lines at the at the end of the file.
+
+export JAVA_HOME=/usr/java/jdk1.8.0_131/
+export JRE_HOME=/usr/java/jdk1.8.0_131/jre
+Now source the file using the following command.
+
+source ~/.bash_profile
+
+Now you can run the echo $JAVA_HOME command again to check if the environment variable is set or not.
+
+[root@liptan-pc ~]# echo $JAVA_HOME 
+/usr/java/jdk1.8.0_131/
+
+Step 3 - Installing Cassandra
+Now add Apache Cassandra repository into your repository list by creating a new repository file.
+
+nano /etc/yum.repos.d/cassandra.repo
+
+Now add the following content into the file.
+
+[cassandra]
+name=Apache Cassandra
+baseurl=https://www.apache.org/dist/cassandra/redhat/311x/
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://www.apache.org/dist/cassandra/KEYS
+You can now install Apache Cassandra by running the following command.
+
+yum -y install cassandra
+
+Reload your system daemons by running:
+
+systemctl daemon-reload
+
+You can now start Cassandra by typing;
+
+systemctl start cassandra
+
+To enable Cassandra to automatically start at boot time, run:
+
+systemctl enable cassandra
+
+You can verify that Cassandra is running by typing the following command.
+
+nodetool status
+
+You should see similar output if Cassandra is running.
+
+[root@ip-172-31-7-136 ~]# nodetool status
+Datacenter: datacenter1
+=======================
+Status=Up/Down
+|/ State=Normal/Leaving/Joining/Moving
+--  Address    Load       Tokens       Owns (effective)  Host ID                               Rack
+UN  127.0.0.1  136.29 KiB  256          100.0%            b3d26649-9e10-4bee-9b3c-8e81c4394b2e  rack1
+
+Instead of the output shown above, if you get something similar to the output below, then you will need to configure cassandra environment configuration file.
+
+
+
+You should have the desired output while running the nodetool command.
+
+Cassandra comes with a powerful command line shell cqlsh to run query on Cluster. Query is written in CQL or Cassandra Query language. To access CQL shell, run the following command.
+
+cqlsh
+
+You will see following output.
+
+[root@liptan-pc ~]# cqlsh
+Connected to Test Cluster at 127.0.0.1:9042.
+[cqlsh 5.0.1 | Cassandra 3.11.0 | CQL spec 3.4.4 | Native protocol v4]
+Use HELP for help.
